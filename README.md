@@ -608,6 +608,10 @@ uvx mypy src
 uv build
 ```
 
+## CI
+
+The [`CI`](.github/workflows/ci.yml) workflow runs on every pull request and on pushes to `main`. It checks the repository's existing commands: `ruff check .` (lint), `mypy src` (static type checks), `pytest` (tests across Python 3.10–3.13), and `uv build` (package build). Superseded runs on the same branch are cancelled automatically.
+
 ### Installing Locally
 
 ```bash
