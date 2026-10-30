@@ -35,7 +35,7 @@ class BaseTool(BaseModel, ABC):
     env_vars: List[EnvVar] = []
     """List of environment variables used by the tool."""
     args_schema: Type[PydanticBaseModel] = Field(
-        default_factory=_ArgsSchemaPlaceholder, validate_default=True
+        default=_ArgsSchemaPlaceholder, validate_default=True
     )
     """The schema for the arguments that the tool accepts."""
     description_updated: bool = False
@@ -54,7 +54,7 @@ class BaseTool(BaseModel, ABC):
     def _default_args_schema(
         cls, v: Type[PydanticBaseModel]
     ) -> Type[PydanticBaseModel]:
-        if not isinstance(v, cls._ArgsSchemaPlaceholder):
+        if v is not cls._ArgsSchemaPlaceholder:
             return v
 
         return type(
@@ -121,49 +121,6 @@ class BaseTool(BaseModel, ABC):
         )
         structured_tool._original_tool = self
         return structured_tool
-
-    @classmethod
-    def from_langchain(cls, tool: Any) -> "BaseTool":
-        """Create a Tool instance from a CrewStructuredTool.
-
-        This method takes a CrewStructuredTool object and converts it into a
-        Tool instance. It ensures that the provided tool has a callable 'func'
-        attribute and infers the argument schema if not explicitly provided.
-        """
-        if not hasattr(tool, "func") or not callable(tool.func):
-            raise ValueError("The provided tool must have a callable 'func' attribute.")
-
-        args_schema = getattr(tool, "args_schema", None)
-
-        if args_schema is None:
-            # Infer args_schema from the function signature if not provided
-            func_signature = signature(tool.func)
-            annotations = func_signature.parameters
-            args_fields = {}
-            for name, param in annotations.items():
-                if name != "self":
-                    param_annotation = (
-                        param.annotation if param.annotation != param.empty else Any
-                    )
-                    field_info = Field(
-                        default=...,
-                        description="",
-                    )
-                    args_fields[name] = (param_annotation, field_info)
-            if args_fields:
-                args_schema = create_model(f"{tool.name}Input", **args_fields)
-            else:
-                # Create a default schema with no fields if no parameters are found
-                args_schema = create_model(
-                    f"{tool.name}Input", __base__=PydanticBaseModel
-                )
-
-        return cls(
-            name=getattr(tool, "name", "Unnamed Tool"),
-            description=getattr(tool, "description", ""),
-            func=tool.func,
-            args_schema=args_schema,
-        )
 
     def _set_args_schema(self):
         if self.args_schema is None:
@@ -247,7 +204,7 @@ class Tool(BaseTool):
             # Infer args_schema from the function signature if not provided
             func_signature = signature(tool.func)
             annotations = func_signature.parameters
-            args_fields = {}
+            args_fields: dict[str, tuple[type, Any]] = {}
             for name, param in annotations.items():
                 if name != "self":
                     param_annotation = (

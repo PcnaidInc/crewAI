@@ -29,6 +29,7 @@ from crewai.utilities.events.llm_events import (
     LLMCallStartedEvent,
     LLMCallType,
     LLMStreamChunkEvent,
+    ToolCall,
 )
 from crewai.utilities.events.tool_usage_events import (
     ToolUsageStartedEvent,
@@ -719,7 +720,7 @@ class LLM(BaseLLM):
             crewai_event_bus.emit(
                 self,
                 event=LLMStreamChunkEvent(
-                    tool_call=tool_call.to_dict(),
+                    tool_call=ToolCall(**tool_call.to_dict()),
                     chunk=tool_call.function.arguments,
                     from_task=from_task,
                     from_agent=from_agent,

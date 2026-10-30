@@ -81,7 +81,7 @@ class ChromaDBClient(BaseClient):
                 "Use acreate_collection() for AsyncClientAPI."
             )
 
-        metadata = kwargs.get("metadata", {})
+        metadata: dict[str, Any] = kwargs.get("metadata", {})
         if "hnsw:space" not in metadata:
             metadata["hnsw:space"] = "cosine"
 
@@ -138,7 +138,7 @@ class ChromaDBClient(BaseClient):
                 "Use create_collection() for ClientAPI."
             )
 
-        metadata = kwargs.get("metadata", {})
+        metadata: dict[str, Any] = kwargs.get("metadata", {})
         if "hnsw:space" not in metadata:
             metadata["hnsw:space"] = "cosine"
 
@@ -189,7 +189,7 @@ class ChromaDBClient(BaseClient):
                 "Use aget_or_create_collection() for AsyncClientAPI."
             )
 
-        metadata = kwargs.get("metadata", {})
+        metadata: dict[str, Any] = kwargs.get("metadata", {})
         if "hnsw:space" not in metadata:
             metadata["hnsw:space"] = "cosine"
 
@@ -242,7 +242,7 @@ class ChromaDBClient(BaseClient):
                 "Use get_or_create_collection() for ClientAPI."
             )
 
-        metadata = kwargs.get("metadata", {})
+        metadata: dict[str, Any] = kwargs.get("metadata", {})
         if "hnsw:space" not in metadata:
             metadata["hnsw:space"] = "cosine"
 

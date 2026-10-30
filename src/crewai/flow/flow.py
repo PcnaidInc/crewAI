@@ -957,11 +957,11 @@ class Flow(Generic[T], metaclass=FlowMeta):
             return args, kwargs
 
         if asyncio.iscoroutinefunction(original_method):
-            async def enhanced_method(*args, **kwargs):
+            async def enhanced_method(*args: Any, **kwargs: Any) -> Any:
                 args, kwargs = prepare_kwargs(*args, **kwargs)
                 return await original_method(*args, **kwargs)
         else:
-            def enhanced_method(*args, **kwargs):
+            def enhanced_method(*args: Any, **kwargs: Any) -> Any:
                 args, kwargs = prepare_kwargs(*args, **kwargs)
                 return original_method(*args, **kwargs)
 

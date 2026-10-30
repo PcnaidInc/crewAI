@@ -13,6 +13,9 @@ class LLMEventBase(BaseEvent):
     agent_id: Optional[str] = None
     agent_role: Optional[str] = None
 
+    from_task: Optional[Any] = None
+    from_agent: Optional[Any] = None
+
     def __init__(self, **data):
         super().__init__(**data)
         self._set_agent_params(data)

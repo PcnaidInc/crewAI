@@ -1184,7 +1184,7 @@ class Crew(FlowTrackable, BaseModel):
 
         return required_inputs
 
-    def copy(self):
+    def copy(self, *args: Any, **kwargs: Any) -> "Crew":
         """
         Creates a deep copy of the Crew instance.
 

@@ -21,10 +21,11 @@ class CrewOutput(BaseModel):
     tasks_output: list[TaskOutput] = Field(
         description="Output of each task", default=[]
     )
-    token_usage: UsageMetrics = Field(description="Processed token summary", default={})
+    token_usage: UsageMetrics = Field(
+        description="Processed token summary", default_factory=UsageMetrics
+    )
 
-    @property
-    def json(self) -> Optional[str]:
+    def to_json(self) -> Optional[str]:
         if self.tasks_output[-1].output_format != OutputFormat.JSON:
             raise ValueError(
                 "No JSON output found in the final task. Please make sure to set the output_json property in the final task in your crew."
