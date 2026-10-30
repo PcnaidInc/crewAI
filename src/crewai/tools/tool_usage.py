@@ -176,8 +176,9 @@ class ToolUsage:
                 "agent": self.agent,
             }
 
-            if self.agent.fingerprint:
-                event_data.update(self.agent.fingerprint)
+            fingerprint = getattr(self.agent, "fingerprint", None)
+            if fingerprint:
+                event_data.update(fingerprint.to_dict())
 
             crewai_event_bus.emit(self,ToolUsageStartedEvent(**event_data))
             

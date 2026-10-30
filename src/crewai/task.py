@@ -670,9 +670,7 @@ Follow these guidelines:
             self.processed_by_agents.add(agent_name)
         self.delegations += 1
 
-    def copy(
-        self, agents: List["BaseAgent"], task_mapping: Dict[str, "Task"]
-    ) -> "Task":
+    def copy(self, *args: Any, **kwargs: Any) -> "Task":
         """Creates a deep copy of the Task while preserving its original class type.
 
         Args:
@@ -682,6 +680,10 @@ Follow these guidelines:
         Returns:
             A copy of the task with the same class type as the original.
         """
+        agents: List["BaseAgent"] = kwargs.get("agents", args[0] if args else [])
+        task_mapping: Dict[str, "Task"] = kwargs.get(
+            "task_mapping", args[1] if len(args) > 1 else {}
+        )
         exclude = {
             "id",
             "agent",

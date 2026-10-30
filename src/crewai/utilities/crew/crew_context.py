@@ -1,6 +1,6 @@
 """Context management utilities for tracking crew and task execution context using OpenTelemetry baggage."""
 
-from typing import Optional
+from typing import Optional, cast
 
 from opentelemetry import baggage
 
@@ -13,4 +13,4 @@ def get_crew_context() -> Optional[CrewContext]:
     Returns:
         CrewContext instance containing crew context information, or None if no context is set
     """
-    return baggage.get_baggage("crew_context")
+    return cast(Optional[CrewContext], baggage.get_baggage("crew_context"))

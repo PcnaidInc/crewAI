@@ -266,7 +266,7 @@ class BaseAgent(ABC, BaseModel):
         """Set the task tools that init BaseAgenTools class."""
         pass
 
-    def copy(self: T) -> T:  # type: ignore # Signature of "copy" incompatible with supertype "BaseModel"
+    def copy(self: T, *args: Any, **kwargs: Any) -> T:
         """Create a deep copy of the Agent."""
         exclude = {
             "id",

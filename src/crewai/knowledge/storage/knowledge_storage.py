@@ -79,7 +79,9 @@ class KnowledgeStorage(BaseKnowledgeStorage):
                         "context": fetched["documents"][0][i],  # type: ignore
                         "score": fetched["distances"][0][i],  # type: ignore
                     }
-                    if result["score"] >= score_threshold:
+                    score = float(result["score"])
+                    if score >= score_threshold:
+                        result["score"] = score
                         results.append(result)
                 return results
             else:
@@ -158,12 +160,12 @@ class KnowledgeStorage(BaseKnowledgeStorage):
             # Build the filtered lists
             for doc_id, (doc, meta) in unique_docs.items():
                 filtered_docs.append(doc)
-                filtered_metadata.append(meta)
+                filtered_metadata.append(meta or {})
                 filtered_ids.append(doc_id)
 
             # If we have no metadata at all, set it to None
             final_metadata: Optional[OneOrMany[chromadb.Metadata]] = (
-                None if all(m is None for m in filtered_metadata) else filtered_metadata
+                None if all(m == {} for m in filtered_metadata) else filtered_metadata
             )
 
             self.collection.upsert(

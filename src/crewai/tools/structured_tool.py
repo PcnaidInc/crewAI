@@ -141,7 +141,7 @@ class CrewStructuredTool:
         type_hints = get_type_hints(func)
 
         # Create field definitions
-        fields = {}
+        fields: dict[str, tuple[type, Any]] = {}
         for param_name, param in sig.parameters.items():
             # Skip self/cls for methods
             if param_name in ("self", "cls"):
